@@ -3,7 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from UA import ua
 
-def get_number_contract(list_search, lens=50, number_list=1):
+def get_fast_info(list_search, lens=50, number_list=1):
     """
 
     :param list_search: list to search need to url search zakupki.gov
@@ -14,11 +14,27 @@ def get_number_contract(list_search, lens=50, number_list=1):
 
     result = {}
     for e in list_search:
-        url = 'https://zakupki.gov.ru/epz/contract/search/results.html?morphology=on&fz44=on' \
-              '&contractStageList_0=on&contractStageList=0&selectedContractDataChanges=ANY&' \
-              'contractCurrencyID=-1&budgetLevelsIdNameHidden=%7B%7D&customerPlace=8408974%2C8408975&' \
-              f'customerPlaceCodes=%2C&goodsDescription={e}&countryRegIdNameHidden=%7B%7D&' \
-              f'sortBy=UPDATE_DATE&pageNumber=1&sortDirection=false&recordsPerPage=_{lens}&showLotsInfoHidden=true'
+        url = 'https://zakupki.gov.ru/epz/order/extendedsearch/results.html?morphology=on&' \
+              'search-filter=+Дате+размещения' \
+              f'&pageNumber={number_list}&sortDirection=false&' \
+              f'recordsPerPage=_{lens}' \
+              '&showLotsInfoHidden=false' \
+              '&sortBy=PUBLISH_DATE' \
+              '&fz44=on' \
+              '&af=on' \
+              '&placingWayList=EA44' \
+              '%2CEAP44%2CEAB44%2CEAO44%2CEEA44%2CZK504%2CZKP504%2CEZK504%2COK504%2COKP504%2COKK504' \
+              '%2COKA504%2CEOK504%2COKB504%2COKI504' \
+              '&selectedLaws=FZ44' \
+              '&currencyIdGeneral=-1' \
+              '&customerPlace=8408974%2C8408975' \
+              '&customerPlaceCodes=91000000000%2C92000000000' \
+              '&OrderPlacementSmallBusinessSubject=on' \
+              '&OrderPlacementRnpData=on' \
+              '&OrderPlacementExecutionRequirement=on' \
+              '&orderPlacement94_0=0' \
+              '&orderPlacement94_1=0' \
+              '&orderPlacement94_2=0'
 
         print(url)
         response = requests.get(url, headers={'accept': '*/*', 'user-agent': ua.firefox})
@@ -29,30 +45,36 @@ def get_number_contract(list_search, lens=50, number_list=1):
         soup = BeautifulSoup(response.text, 'lxml')
         soup = soup.body
 
-        quotes = soup.find_all('div', class_="row no-gutters registry-entry__form mr-0")
+        quotes = soup.find_all('div', class_="search-registry-entry-block box-shadow-search-input")
         contract_number = {}
 
         for i in quotes:
 
+
             href = i.find(class_="registry-entry__header-mid__number")
             href = href.find('a')
             href = href.get('href')
-
-            names = i.find(class_='pl-0 col')
+            print(href)
+            names = i.find(class_='registry-entry__body-value')
             names = names.text
             names = re.sub(r'\s\s', '', names)
             names = re.sub(r'\n', '', names)
+            print(names)
+            price = i.find(class_='col col d-flex flex-column registry-entry__right-block b-left')
 
-            price = i.find(class_='col d-flex flex-column registry-entry__right-block b-left')
             price = price.find(class_='price-block__value').text
             price = re.sub(r'\s', '', price)
             price = re.sub(r'\n', '', price)
+            print(price)
 
             date = i.find(class_='data-block__value')
             date = date.text
+            print(date)
             # проверяем на наличие в таблице
-            a = f'zakupki.gov.ru{href}'
 
+            contract_number[href] = [names, price, date]
+            """
+            a = f'zakupki.gov.ru{href}'
             con = sqlite3.connect('rassil.db')
             cur = con.cursor()
             cur.execute('''SELECT contract_number FROM rassil WHERE contract_number = ?''', (a,))
@@ -71,7 +93,8 @@ def get_number_contract(list_search, lens=50, number_list=1):
                 con.commit()
                 con.close()
                 continue
-
+            """
         result[e] = contract_number
 
-    return result
+    return print(result)
+get_fast_info(list_search=[1], lens=50, number_list=1)
