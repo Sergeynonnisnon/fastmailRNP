@@ -14,7 +14,7 @@ def main():
         fast_info = get_fast_info([1, ], lens=50, number_list=i)
     upgrade_child(query='ремонт', name='remont')
     upgrade_sheets('remont')
-    a=input()
+
     time.sleep(10)
     sys.exit()
 

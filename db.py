@@ -1,9 +1,11 @@
 # coding=UTF-8
 import sys
 import time
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 import sqlite3
 
-from sheets import *
+from sheets import upgrade_googlesheet
 
 
 def bd_create(name='oll',namecol=None):
