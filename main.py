@@ -2,16 +2,19 @@
 
 from parse_fast import parse_fastest
 from parse_full import *
-import gspread
+
 from db import base
 from sheets import googlesheet
-import time
+import sys, time, os
+
 
 
 
 
 def main():
-    for i in range(1,50):
+    start_time = time.time()
+
+    for i in range(1,1):
         parse_fast = parse_fastest()
         fast_info = parse_fast.get_fast_info([1, ], lens=50, number_list=i)
 
@@ -21,11 +24,7 @@ def main():
     googlesheet().add_checkbox('F')
     googlesheet().check_date_ending()
 
-
-
-
-    #sys.exit()
-
+    stop_time = time.time()
 
 
 if __name__ == '__main__':

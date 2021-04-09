@@ -29,7 +29,7 @@ class googlesheet():
     def upgrade_googlesheet(self,insertrow):
         """
         insert row in last empty row in google sheet
-        :param insertrow: list
+        :param insertrow: apending list
         :return: None
         """
         self.sheet.append_row(insertrow)
@@ -54,7 +54,7 @@ class googlesheet():
     def check_checkbox_exist(self):
         """
         add checkbox in F col if not exist
-        :return:
+        :return:None
         """
         #print(len(self.sheet.col_values(1)))
         for i in range(2,len(self.col_values)+1):
@@ -75,6 +75,10 @@ class googlesheet():
 
 
     def check_date_ending (self):
+        """
+        check if filing date  is finish
+        :return: None
+        """
         now = datetime.now().strftime("%d.%m.%Y")
 
         for i in range(2, len(self.col_values)-2 ):

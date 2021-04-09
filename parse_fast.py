@@ -8,7 +8,7 @@ class parse_fastest():
     def __init__(self):
         pass
 
-    def get_fast_info(self, list_search, lens=50, number_list=1):
+    def get_fast_info(self, list_search, lens=100, number_list=1):
         """
         :param list_search: list to search need to url search zakupki.gov
         :param lens: len records on page in url search
@@ -77,7 +77,7 @@ class parse_fastest():
                 # проверяем на наличие в таблице
 
                 contract_number[href] = [names, price, date]
-                # TODO сделать проверку на бд
+
 
                 a = f'zakupki.gov.ru{href}'
                 con = sqlite3.connect('oll.db')
