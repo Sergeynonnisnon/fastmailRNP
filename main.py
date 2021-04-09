@@ -1,22 +1,30 @@
 # coding=UTF-8
 
-
-from parse_fast import *
+from parse_fast import parse_fastest
 from parse_full import *
-from db import *
-from sheets import upgrade_googlesheet
+import gspread
+from db import base
+from sheets import googlesheet
+import time
 
 
 
 
 def main():
-    for i in range(20):
-        fast_info = get_fast_info([1, ], lens=50, number_list=i)
-    upgrade_child(query='ремонт', name='remont')
-    upgrade_sheets('remont')
+    for i in range(1,50):
+        parse_fast = parse_fastest()
+        fast_info = parse_fast.get_fast_info([1, ], lens=50, number_list=i)
 
-    time.sleep(10)
-    sys.exit()
+    bd = base()
+    bd.upgrade_child(query='ремонт', name='remont')
+    bd.upgrade_sheets('remont')
+    googlesheet().add_checkbox('F')
+    googlesheet().check_date_ending()
+
+
+
+
+    #sys.exit()
 
 
 
