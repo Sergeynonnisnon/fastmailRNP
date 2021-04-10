@@ -14,9 +14,9 @@ import sys, time, os
 def main():
     start_time = time.time()
 
-    for i in range(1,1):
+    for i in range(1,21):
         parse_fast = parse_fastest()
-        fast_info = parse_fast.get_fast_info([1, ], lens=50, number_list=i)
+        fast_info = parse_fast.get_fast_info([1, ], lens=100, number_list=i)
 
     bd = base()
     bd.upgrade_child(query='ремонт', name='remont')
@@ -25,6 +25,8 @@ def main():
     googlesheet().check_date_ending()
 
     stop_time = time.time()
+
+    print('время выполнения ',stop_time-start_time)
 
 
 if __name__ == '__main__':
