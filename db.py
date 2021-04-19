@@ -24,7 +24,7 @@ class base ():
         con = sqlite3.connect(f'{name}.db')
         cur = con.cursor()
 
-        cur.execute(f'''CREATE TABLE IF NOT EXIST {name} ({namecol})''')
+        cur.execute(f'''CREATE TABLE IF NOT EXISTS {name} ({namecol})''')
 
         con.commit()
         con.close()
@@ -76,6 +76,7 @@ class base ():
 
         con.commit()
         con.close()
+
 
 #bd_create(name="oll",namecol='con_num text,name_trade text,price text, date text,deadline text,on_sheets text')
 
