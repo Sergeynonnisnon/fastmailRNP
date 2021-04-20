@@ -1,9 +1,13 @@
 # coding=UTF-8
+import random
 import re
+import time
+
 import requests
 from bs4 import BeautifulSoup
 from UA import ua
 import sqlite3
+from mailing import newclients_mailing
 
 """
 """
@@ -92,18 +96,18 @@ class new_clients():
             try:
                 name
             except UnboundLocalError:
-                name = None
+                name = False
             try:
                 FIO
             except UnboundLocalError:
-                FIO = None
+                FIO = False
             try:
                 phone
             except UnboundLocalError:
-                phone = None
+                phone = False
             result.append((name, type_org, FIO, INN, email, phone, 0))
 
-            name, type_org, FIO, INN, email, phone = None, None, None, None, None, None
+            name, type_org, FIO, INN, email, phone = False, False,False,False,False,False
         return result
 
     def upgrade_newclients_db(self, info):
@@ -119,11 +123,30 @@ class new_clients():
                 print(f'alredy in newclients')
         con.commit()
         con.close()
+    def read_newclients_db(self):
+        con = sqlite3.connect(f'newclients.db')
+        cur = con.cursor()
+        cur.execute(f'''SELECT * FROM newclients WHERE status = 0''')
+        check = cur.fetchall()
 
+        con.commit()
+        con.close()
+
+        return check
 
 new_clients = new_clients()
+
 # base().bd_create(name='newclients', namecol='name text, type_org text, FIO text, INN text, email text, phone text, status email integer')
-for i in range(1, 5):
-    a = new_clients.get_new_clients_href(lens=100, number_list=i)
-    info = new_clients.new_clients_full_info(a)
-    new_clients.upgrade_newclients_db(info)
+
+def getting():
+    for i in range(1, 15):
+        a = new_clients.get_new_clients_href(lens=100, number_list=i)
+        info = new_clients.new_clients_full_info(a)
+        new_clients.upgrade_newclients_db(info)
+
+record = new_clients.read_newclients_db()
+for records in record:
+    newclients_mailing(records)
+    time.sleep(random.randint(1,5))
+
+getting()
