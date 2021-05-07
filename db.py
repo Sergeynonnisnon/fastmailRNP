@@ -29,7 +29,7 @@ class base ():
         con.commit()
         con.close()
 
-    def upgrade_child(self,query, name):
+    def upgrade_child(self, query, name):
         con = sqlite3.connect(f'oll.db')
         cur = con.cursor()
         cur.execute('''SELECT name_trade FROM oll ''')

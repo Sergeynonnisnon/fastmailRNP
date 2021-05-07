@@ -136,7 +136,7 @@ class new_clients:
     def read_newclients_db(self):
         con = sqlite3.connect(f'newclients.db')
         cur = con.cursor()
-        cur.execute(f'''SELECT * FROM newclients WHERE status = 0 AND name = 0 LIMIT 10''')
+        cur.execute(f'''SELECT * FROM newclients WHERE status = 0 AND name = 0 LIMIT 50''')
         check = cur.fetchall()
 
         con.commit()

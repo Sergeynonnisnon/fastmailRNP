@@ -10,6 +10,15 @@ from sheets import googlesheet
 import sys,time, os
 
 
+def timeit(func):
+    def wraper(*args,**kwargs):
+        start_time = time.time()
+        result = func(*args,**kwargs)
+
+        print('время выполнения ', time.time()-start_time)
+        return result
+    return wraper
+@timeit
 def shets():
     for i in range(1,10):
         parse_fast = parse_fastest()
@@ -18,44 +27,26 @@ def shets():
     bd = base()
     bd.upgrade_child(query='ремонт', name='remont')
     bd.upgrade_sheets('remont')
-    time.sleep(60)
-    googlesheet().add_checkbox('F')
-    time.sleep(60)
-
+    print('переходим к удалению старых закупок')
     googlesheet().check_date_ending()
+    print('переходим к чекбоксам')
+    googlesheet().add_checkbox('F')
 
 
 
-def get_logger():
-    logger = logging.getLogger("threading_example")
-    logger.setLevel(logging.DEBUG)
-
-    fh = logging.FileHandler("threading.log")
-    fmt = '%(asctime)s - %(threadName)s - %(levelname)s - %(message)s'
-    formatter = logging.Formatter(fmt)
-    fh.setFormatter(formatter)
-
-    logger.addHandler(fh)
-    return logger
 
 
+@timeit
 def main():
-
-    start_time = time.time()
     shets()
-    stop_time = time.time()
-
-    print('Время выполнения заполнения гугл таблиц', stop_time-start_time)
-    start_time = time.time()
     nc = new_clients()
 
     #nc.mailing_newclients()
-    stop_time = time.time()
-    print('Время выполнения  отправления писем', stop_time - start_time)
-    start_time = time.time()
-    nc.getting()
-    stop_time = time.time()
-    print('Время выполнения заполнения базы данных новыми закупками', stop_time - start_time)
+
+    #start_time = time.time()
+    #nc.getting()
+   # stop_time = time.time()
+    #print('Время выполнения заполнения базы данных новыми закупками', stop_time - start_time)
 
 if __name__ == '__main__':
     main()

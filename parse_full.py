@@ -1,6 +1,7 @@
 import re
 import requests
 from bs4 import BeautifulSoup
+from UA import *
 
 
 def get_full_info(fast_contract_info):

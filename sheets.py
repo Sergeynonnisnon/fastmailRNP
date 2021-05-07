@@ -2,31 +2,27 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from gspread_formatting import DataValidationRule, BooleanCondition, set_data_validation_for_cell_range
-from typing import Iterable, Dict, List, Set, Tuple
+
 import gspread
 import time
 from datetime import datetime
 
 
-
-
-
-class googlesheet():
-    def __init__(self,name_sheet='Макс закупки',worksheet='новая таблица'):
+class googlesheet:
+    def __init__(self, name_sheet='Макс закупки', worksheet='новая таблица'):
 
         self.name_sheet = name_sheet
         self.worksheet = worksheet
         self.validation_rule = DataValidationRule(BooleanCondition('BOOLEAN', ['TRUE', 'FALSE']),
                                                   # condition'type' and 'values', defaulting to TRUE/FALSE
-            showCustomUi=True)
+                                                  showCustomUi=True)
         self.scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/spreadsheets',
-                 "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
+                      "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
         self.creds = ServiceAccountCredentials.from_json_keyfile_name("creds.json", self.scope)
         self.client = gspread.authorize(self.creds)
         self.sheet = self.client.open(f"{name_sheet}").worksheet(worksheet)
-        self.col_values = self.sheet.col_values(1)
 
-    def upgrade_googlesheet(self,insertrow):
+    def upgrade_googlesheet(self, insertrow):
         """
         insert row in last empty row in google sheet
         :param insertrow: apending list
@@ -34,8 +30,7 @@ class googlesheet():
         """
         self.sheet.append_row(insertrow)
 
-
-    def read_googlesheet(self,cell):
+    def read_googlesheet(self, cell):
         """
         Reead data in cell
         :param cell: str ,cell in googlesheets
@@ -43,61 +38,39 @@ class googlesheet():
         """
         return self.sheet.get(cell)
 
-    def add_checkbox(self,cell):
+    def add_checkbox(self, cell='F'):
         """
         add checkbox in cell
         :param cell: cell in googlesheets
         :return: None
         """
-        set_data_validation_for_cell_range(self.sheet, 'F', self.validation_rule)
-
-    def check_checkbox_exist(self):
-        """
-        add checkbox in F col if not exist
-        :return:None
-        """
-        #print(len(self.sheet.col_values(1)))
-        for i in range(2,len(self.col_values)+1):
-            #print(str(self.read_googlesheet(f'F{i}')), f'F{i}')
-            #print(self.read_googlesheet(f'F{i}'), f'F{i}')
-            try:
-                if self.read_googlesheet(f'F{i}') == '[]':
-                    #(f'F{i} add', self.read_googlesheet(f'F{i}'))
-                    self.add_checkbox(f'F{i}')
-
-                #print(self.read_googlesheet(f'F{i}'))
-
-            except Exception(gspread.exceptions.APIError) as err:
-                print('подождем минутку check_date_ending', err)
-                time.sleep(60)
-                continue
+        _col_f = self.sheet.col_values(6)
+        set_data_validation_for_cell_range(self.sheet, cell, self.validation_rule)
 
 
 
-    def check_date_ending (self):
+    def check_date_ending(self):
         """
         check if filing date  is finish
         :return: None
         """
-        now = datetime.now().strftime("%d.%m.%Y")
+        now = datetime.now()
 
-        for i in range(2, len(self.col_values)-2):
+        col_e = self.sheet.col_values(5)[1:]
+        col_f = self.sheet.col_values(6)[1:]
 
-            try:
-                #TODO   разобраться почему так много запросов в чтении
-                if now >= str(self.read_googlesheet(f'E{i}')[0][0]) and \
-                        str(self.read_googlesheet(f'F{i}')) != str([['TRUE']]):
-                    #print(str(self.read_googlesheet(f'F{i}')))
-                    #print(now, str(self.read_googlesheet(f'E{i}')))
+        y = 0
+        del_row = []
 
-                    self.sheet.delete_rows(i, i)
+        for i in col_e:
 
+            deadline = datetime.strptime(i, "%d.%m.%Y")
 
-            except gspread.exceptions.APIError:
-                print('подождем минутку check_date_ending')
-                time.sleep(60)
-                continue
+            if now > deadline and col_f[y] != 'TRUE':
+                del_row.append(y + 2)
+            y += 1
+        for i in reversed(del_row):
+            self.sheet.delete_rows(i)
+            print(f'Удалена запись № {i} т.к. окончание подачи заявок прошло')
 
-            except IndexError:
-                break
 
