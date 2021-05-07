@@ -41,12 +41,12 @@ def main():
     shets()
     nc = new_clients()
 
-    #nc.mailing_newclients()
+    nc.mailing_newclients()
 
-    #start_time = time.time()
-    #nc.getting()
-   # stop_time = time.time()
-    #print('Время выполнения заполнения базы данных новыми закупками', stop_time - start_time)
+    start_time = time.time()
+    nc.getting()
+    stop_time = time.time()
+    print('Время выполнения заполнения базы данных новыми закупками', stop_time - start_time)
 
 if __name__ == '__main__':
     main()
