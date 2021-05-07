@@ -2,19 +2,23 @@
 import random
 import re
 import time
-
+from newclients.mailing import newclients_mailing
 import requests
 from bs4 import BeautifulSoup
 from UA import ua
 import sqlite3
-from mailing import newclients_mailing
+
 
 """
 """
 
 
-class new_clients():
+class new_clients:
     def __init__(self):
+        self.countnewclients = 0
+        self.alredynewclients = 0
+        self.totalappend = 0
+
         pass
 
     @staticmethod
@@ -70,7 +74,7 @@ class new_clients():
         result = []
         for href in hrefs:
             url = 'https://zakupki.gov.ru' + href
-            print(url)
+
             response = requests.get(url, headers={'accept': '*/*', 'user-agent': ua.firefox})
             if response.status_code > 200:
                 print('requests bad')
@@ -108,6 +112,7 @@ class new_clients():
             result.append((name, type_org, FIO, INN, email, phone, 0))
 
             name, type_org, FIO, INN, email, phone = False, False,False,False,False,False
+        print(f'отправленно на обработку {len(hrefs)} ссылок')
         return result
 
     def upgrade_newclients_db(self, info):
@@ -118,15 +123,20 @@ class new_clients():
             check = cur.fetchall()
             if check == []:
                 cur.execute(f'INSERT INTO newclients VALUES(?,?,?,?,?,?,?)', record)
-                print(record, f'append in newclients ')
+                self.countnewclients += 1
             else:
-                print(f'alredy in newclients')
+                self.alredynewclients += 1
+        print(f'Добавленно в таблицу {self.countnewclients} записей \nУже в таблице {self.alredynewclients} записей')
+        self.totalappend += self.countnewclients
+        self.countnewclients = 0
+
+        self.alredynewclients = 0
         con.commit()
         con.close()
     def read_newclients_db(self):
         con = sqlite3.connect(f'newclients.db')
         cur = con.cursor()
-        cur.execute(f'''SELECT * FROM newclients WHERE status = 0''')
+        cur.execute(f'''SELECT * FROM newclients WHERE status = 0 AND name = 0 LIMIT 10''')
         check = cur.fetchall()
 
         con.commit()
@@ -134,19 +144,19 @@ class new_clients():
 
         return check
 
-new_clients = new_clients()
+    def getting(self):
+        for i in range(1, 10):
+            a = self.get_new_clients_href(lens=100, number_list=i)
+            info = self.new_clients_full_info(a)
+            self.upgrade_newclients_db(info)
+        print(f'Всего добавленно {self.totalappend} записей в таблицу')
+
+    def mailing_newclients(self):
+        record = self.read_newclients_db()
+        for records in record:
+            newclients_mailing(records)
+            time.sleep(random.randint(1, 5))
 
 # base().bd_create(name='newclients', namecol='name text, type_org text, FIO text, INN text, email text, phone text, status email integer')
 
-def getting():
-    for i in range(1, 15):
-        a = new_clients.get_new_clients_href(lens=100, number_list=i)
-        info = new_clients.new_clients_full_info(a)
-        new_clients.upgrade_newclients_db(info)
 
-record = new_clients.read_newclients_db()
-for records in record:
-    newclients_mailing(records)
-    time.sleep(random.randint(1,5))
-
-getting()

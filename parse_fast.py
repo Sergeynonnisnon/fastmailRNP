@@ -40,7 +40,7 @@ class parse_fastest():
                   '&orderPlacement94_1=0' \
                   '&orderPlacement94_2=0'
 
-            print(url)
+
             response = requests.get(url, headers={'accept': '*/*', 'user-agent': ua.firefox})
             if response.status_code > 200:
                 print('bad ' + e)

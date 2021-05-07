@@ -12,7 +12,7 @@ from email.mime.audio import MIMEAudio                      # Аудио
 from email.mime.multipart import MIMEMultipart              # Многокомпонентный объект
 
 
-class newclients_mailing :
+class newclients_mailing():
     def __init__(self, record):
 
         self.record = record
@@ -57,7 +57,7 @@ class newclients_mailing :
         else:
             msg_subj = f'Сопровождение торгов Для  {record[0]} '
             msg_text = f"""
-                    Поздравляем с успешной регистрации в Единой информационной системе !{record[0]}\n
+                    Уважаемый участник закупок ,{record[0]}\n
                     Наша компания занимается комплексным сопровождением торгов с 2014 года , мы предлагаем лучший сервис по скромным ценам. Наше преимущество автоматизация почти всех закупочных процедур, которые созданы под пылким руководством настоящих профессионалов своего дела. 
                     \nМы предлагаем:
                     -Полное сопровождения участника на всех этапах закупочных процедур.
@@ -89,8 +89,8 @@ class newclients_mailing :
         con.commit()
         con.close()
 
-        addr_from = "rnp.informator@gmail.com"  # Отправитель
-        password = "Wertu007!"  # Пароль
+        addr_from = "rnp.auto.informator@gmail.com"  # Отправитель
+        password = "zPxcjWHUW6rWW22"  # Пароль
 
         msg = MIMEMultipart()  # Создаем сообщение
         msg['From'] = addr_from  # Адресат

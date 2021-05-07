@@ -58,17 +58,17 @@ class googlesheet():
         """
         #print(len(self.sheet.col_values(1)))
         for i in range(2,len(self.col_values)+1):
-            print(str(self.read_googlesheet(f'F{i}')), f'F{i}')
-            print(self.read_googlesheet(f'F{i}'), f'F{i}')
+            #print(str(self.read_googlesheet(f'F{i}')), f'F{i}')
+            #print(self.read_googlesheet(f'F{i}'), f'F{i}')
             try:
                 if self.read_googlesheet(f'F{i}') == '[]':
-                    print(f'F{i} add', self.read_googlesheet(f'F{i}'))
+                    #(f'F{i} add', self.read_googlesheet(f'F{i}'))
                     self.add_checkbox(f'F{i}')
 
                 #print(self.read_googlesheet(f'F{i}'))
 
             except Exception(gspread.exceptions.APIError) as err:
-                print('подождем минутку ', err)
+                print('подождем минутку check_date_ending', err)
                 time.sleep(60)
                 continue
 
@@ -81,20 +81,20 @@ class googlesheet():
         """
         now = datetime.now().strftime("%d.%m.%Y")
 
-        for i in range(2, len(self.col_values)-2 ):
-            print(str(self.read_googlesheet(f'E{i}')))
-            try:
+        for i in range(2, len(self.col_values)-2):
 
+            try:
+                #TODO   разобраться почему так много запросов в чтении
                 if now >= str(self.read_googlesheet(f'E{i}')[0][0]) and \
                         str(self.read_googlesheet(f'F{i}')) != str([['TRUE']]):
-                    print(str(self.read_googlesheet(f'F{i}')))
-                    print(now, str(self.read_googlesheet(f'E{i}')))
+                    #print(str(self.read_googlesheet(f'F{i}')))
+                    #print(now, str(self.read_googlesheet(f'E{i}')))
 
                     self.sheet.delete_rows(i, i)
 
 
             except gspread.exceptions.APIError:
-                print('подождем минутку ')
+                print('подождем минутку check_date_ending')
                 time.sleep(60)
                 continue
 
