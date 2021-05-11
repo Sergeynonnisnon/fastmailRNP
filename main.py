@@ -2,8 +2,7 @@
 from newclients.new_clienst import new_clients
 from newclients.mailing import newclients_mailing
 from parse_fast import parse_fastest
-
-import logging
+from rnp_mail import main as RNP
 
 from db import base
 from sheets import googlesheet
@@ -38,6 +37,7 @@ def shets():
 
 @timeit
 def main():
+    """
     shets()
     nc = new_clients()
 
@@ -46,7 +46,10 @@ def main():
     start_time = time.time()
     nc.getting()
     stop_time = time.time()
-    print('Время выполнения заполнения базы данных новыми закупками', stop_time - start_time)
-
+    print('Время выполнения заполнения базы данных новыми закупками', stop_time - start_time)"""
+    start_time = time.time()
+    RNP.main()
+    stop_time = time.time()
+    print('Время выполнения РНП', stop_time - start_time)
 if __name__ == '__main__':
     main()

@@ -65,10 +65,13 @@ class googlesheet:
         for i in col_e:
 
             deadline = datetime.strptime(i, "%d.%m.%Y")
-
-            if now > deadline and col_f[y] != 'TRUE':
-                del_row.append(y + 2)
-            y += 1
+            try:
+                if now > deadline and col_f[y] != 'TRUE':
+                    del_row.append(y + 2)
+            except IndexError:
+                pass
+            finally:
+                y += 1
         for i in reversed(del_row):
             self.sheet.delete_rows(i)
             print(f'Удалена запись № {i} т.к. окончание подачи заявок прошло')

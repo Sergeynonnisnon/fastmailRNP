@@ -30,8 +30,8 @@ https://zakupki.gov.ru/epz/dizk/dizkCard/generalInformation.html?dizkId={mess}
 '''
 
     # setup the parameters of the message
-    password = "Wertu007!"
-    msg['From'] = "rnp.informator@gmail.com"
+    password = "OuPA3licT3u$"
+    msg['From'] = "9127343243@mail.ru"
     msg['To'] = to_email
     msg['Subject'] = f'уведомление о внесении в РНП по контракту№{subscription}'
 
@@ -39,7 +39,7 @@ https://zakupki.gov.ru/epz/dizk/dizkCard/generalInformation.html?dizkId={mess}
     msg.attach(MIMEText(message, 'plain'))
 
     # create server
-    server = smtplib.SMTP('smtp.gmail.com: 587')
+    server = smtplib.SMTP('smtp.mail.ru: 465')
 
     server.starttls()
 
@@ -53,7 +53,7 @@ https://zakupki.gov.ru/epz/dizk/dizkCard/generalInformation.html?dizkId={mess}
 
     con = sqlite3.connect('RNP.db')
     cur = con.cursor()
-    cur.execute(f"UPDATE RNP SET status = 0 WHERE  decision_number = {mess}")
+    cur.execute(f"UPDATE RNP SET status = 0 WHERE  decision_number = {mess} LIMIT 50")
     con.commit()
     con.close()
 def format_string(a):

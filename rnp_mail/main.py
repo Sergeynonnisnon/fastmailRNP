@@ -5,7 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 
-from mail import *
+from rnp_mail.mail import *
 
 ua = UserAgent()
 
@@ -169,6 +169,3 @@ def main():
 
 
 
-
-if __name__ == '__main__':
-    main()
