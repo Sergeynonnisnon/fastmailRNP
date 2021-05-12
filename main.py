@@ -21,6 +21,7 @@ def timeit(func):
 def shets():
     for i in range(1, 10):
         parse_fast = parse_fastest()
+        parse_fast.get_fast_info([1, ], lens=100, number_list=i)
 
     bd = base()
     bd.upgrade_child(query='ремонт', name='remont')
@@ -33,16 +34,16 @@ def shets():
 
 @timeit
 def main():
-
+    print("начинаем работу с таблицей")
     shets()
     nc = new_clients()
 
     nc.mailing_newclients()
-
+    print('переходим к наполнению базы данных новыми клиентами')
     start_time = time.time()
     nc.getting()
-    stop_time = time.time()
-    print('Время выполнения заполнения базы данных новыми закупками', stop_time - start_time)
+
+    print('Время выполнения заполнения базы данных новыми закупками', time.time() - start_time)
     start_time = time.time()
     RNP.main()
     stop_time = time.time()

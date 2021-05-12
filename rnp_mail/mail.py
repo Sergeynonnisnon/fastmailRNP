@@ -77,7 +77,7 @@ def mailing():
     con = sqlite3.connect('RNP.db')
 
     cur = con.cursor()
-    cur.execute('''SELECT * FROM RNP WHERE status = 0 AND email_status = 1  LIMIT 1''')
+    cur.execute('''SELECT * FROM RNP WHERE status = 0 AND email_status = 1  LIMIT 50''')
     exists = cur.fetchall()
     print(exists)
     for data in exists:
