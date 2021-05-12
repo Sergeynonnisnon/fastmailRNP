@@ -158,14 +158,10 @@ def upgrade_row(answers):
 
 
 def main():
-    for i in range(1,15):
-        number_list=i
-        lens = 100
-        href = get_href(lens, number_list)
-        number = number_contract(href)
-        email = get_email(number)
-        upgrade_row(email)
-        mailing()
-
-
-
+    number_list = 1
+    lens = 100
+    href = get_href(lens, number_list)
+    number = number_contract(href)
+    email = get_email(number)
+    upgrade_row(email)
+    mailing()

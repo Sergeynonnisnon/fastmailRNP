@@ -37,7 +37,7 @@ def shets():
 
 @timeit
 def main():
-    """
+
     shets()
     nc = new_clients()
 
@@ -46,7 +46,7 @@ def main():
     start_time = time.time()
     nc.getting()
     stop_time = time.time()
-    print('Время выполнения заполнения базы данных новыми закупками', stop_time - start_time)"""
+    print('Время выполнения заполнения базы данных новыми закупками', stop_time - start_time)
     start_time = time.time()
     RNP.main()
     stop_time = time.time()

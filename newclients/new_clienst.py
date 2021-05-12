@@ -136,7 +136,7 @@ class new_clients:
     def read_newclients_db(self):
         con = sqlite3.connect(f'newclients.db')
         cur = con.cursor()
-        cur.execute(f'''SELECT * FROM newclients WHERE status = 0 AND name = 0 LIMIT 50''')
+        cur.execute(f'''SELECT * FROM newclients WHERE status = 0 AND name = 0 LIMIT 10''')
         check = cur.fetchall()
 
         con.commit()
@@ -145,7 +145,7 @@ class new_clients:
         return check
 
     def getting(self):
-        for i in range(1, 10):
+        for i in range(1, 3):
             a = self.get_new_clients_href(lens=100, number_list=i)
             info = self.new_clients_full_info(a)
             self.upgrade_newclients_db(info)

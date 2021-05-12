@@ -57,7 +57,7 @@ class googlesheet:
         now = datetime.now()
 
         col_e = self.sheet.col_values(5)[1:]
-        col_f = self.sheet.col_values(6)[1:]
+        col_f = self.sheet.col_values(6)[1:] #BUG here
 
         y = 0
         del_row = []
@@ -65,15 +65,19 @@ class googlesheet:
         for i in col_e:
 
             deadline = datetime.strptime(i, "%d.%m.%Y")
+
             try:
+
                 if now > deadline and col_f[y] != 'TRUE':
                     del_row.append(y + 2)
+
             except IndexError:
-                pass
+                print('bad index')
+                continue
             finally:
                 y += 1
         for i in reversed(del_row):
             self.sheet.delete_rows(i)
             print(f'Удалена запись № {i} т.к. окончание подачи заявок прошло')
 
-
+#TODO проблема : после добавления новых строк в таблицу столбец F не отображает верное количество строк

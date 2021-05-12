@@ -30,8 +30,8 @@ https://zakupki.gov.ru/epz/dizk/dizkCard/generalInformation.html?dizkId={mess}
 '''
 
     # setup the parameters of the message
-    password = "OuPA3licT3u$"
-    msg['From'] = "9127343243@mail.ru"
+    password = "zPxcjWHUW6rWW22"
+    msg['From'] = "rnp.auto.informator@gmail.com"
     msg['To'] = to_email
     msg['Subject'] = f'уведомление о внесении в РНП по контракту№{subscription}'
 
@@ -39,8 +39,9 @@ https://zakupki.gov.ru/epz/dizk/dizkCard/generalInformation.html?dizkId={mess}
     msg.attach(MIMEText(message, 'plain'))
 
     # create server
-    server = smtplib.SMTP('smtp.mail.ru: 465')
 
+    server = smtplib.SMTP('smtp.gmail.com: 587')
+    print('отправленно на ', to_email)
     server.starttls()
 
     # Login Credentials for sending the mail
@@ -53,9 +54,12 @@ https://zakupki.gov.ru/epz/dizk/dizkCard/generalInformation.html?dizkId={mess}
 
     con = sqlite3.connect('RNP.db')
     cur = con.cursor()
-    cur.execute(f"UPDATE RNP SET status = 0 WHERE  decision_number = {mess} LIMIT 50")
+    cur.execute(f"UPDATE RNP SET status = 0 WHERE  decision_number = {mess} ")
     con.commit()
     con.close()
+    print('отправленно на ',to_email)
+
+
 def format_string(a):
     for i in a:
         if i == '.':
@@ -70,29 +74,32 @@ def format_string(a):
 
 def mailing():
     con = sqlite3.connect('RNP.db')
+
     cur = con.cursor()
-    cur.execute('''SELECT * FROM RNP WHERE status = 1 AND email_status = 1''')
+    cur.execute('''SELECT * FROM RNP WHERE status = 0 AND email_status = 1  LIMIT 10''')
     exists = cur.fetchall()
+    print(exists)
     for data in exists:
-        #format_email = format_string(str(data[2]))
-        cur.execute(f'''SELECT * FROM RNP WHERE email = ?''',(data[2],))
+
+        cur.execute(f'''SELECT * FROM RNP WHERE email = ?''', (data[2],))
         checks = cur.fetchall()
 
+
         if len(checks) <= 1:
+
             send_email(data[0], data[2], data[1])
+            print(checks)
             rand_sleep = random.randint(1, 5)
             time.sleep(float(rand_sleep))
             print(f'отправлено на {data[2]}')
             print(f'Ожидаю {rand_sleep} секунд для отправки следующего письма')
 
         else:
-            cur.execute(f"UPDATE RNP SET status = 0 WHERE  email = ?",(data[2],))
-            con.commit()
+            cur.execute(f"UPDATE RNP SET status = 0 WHERE  email = ?", (data[2],))
+
             print(f'{checks} уже в таблице и ему не будет направленн емейл')
 
 
-    # cur.execute(f"UPDATE RNP SET status = 0 WHERE  decision_number = {mess}")
     print(f'направлено {len(exists)} емейл')
     con.commit()
     con.close()
-
