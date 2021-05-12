@@ -63,9 +63,11 @@ class googlesheet:
         del_row = []
 
         for i in col_e:
-
-            deadline = datetime.strptime(i, "%d.%m.%Y")
-
+            try:
+                deadline = datetime.strptime(i, "%d.%m.%Y")
+            except ValueError:
+                print ('пустая строка')
+                continue
             try:
 
                 if now > deadline and col_f[y] != 'TRUE':
@@ -73,6 +75,9 @@ class googlesheet:
 
             except IndexError:
                 print('bad index')
+                continue
+            except ValueError:
+                print ('пустая строка')
                 continue
             finally:
                 y += 1

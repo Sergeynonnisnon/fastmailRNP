@@ -47,7 +47,6 @@ def get_full_info(fast_contract_info):
     return fast_contract_info
 
 
-
 def parse_string(string):
     name = None
     inn = None

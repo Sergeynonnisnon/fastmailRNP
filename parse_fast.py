@@ -4,6 +4,8 @@ import requests
 from bs4 import BeautifulSoup
 from UA import ua
 import sqlite3
+
+
 class parse_fastest():
     def __init__(self):
         pass
@@ -40,8 +42,8 @@ class parse_fastest():
                   '&orderPlacement94_1=0' \
                   '&orderPlacement94_2=0'
 
-
             response = requests.get(url, headers={'accept': '*/*', 'user-agent': ua.firefox})
+
             if response.status_code > 200:
                 print('bad ' + e)
                 continue

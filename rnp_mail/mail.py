@@ -11,9 +11,9 @@ import random
 def send_email(mess, to_email, subscription):
     msg = MIMEMultipart()
 
-    message = f'''Добрый день, Заказчик принял решение расторгнуть с Вами контракт в одностороннем порядке.
+    message = f'''     С Вами расторгли контракт в одностороннем порядке! Заказчик сошел с ума? Или он решил Вам что-то доказать?
 
-Мы знаем, что и в какие сроки необходимо сделать, чтобы Заказчик отменил данное решение и сведения о Вас не были включены в РНП, а также, как вернуть обеспечение контракта. Вы можете задать любые вопросы!
+Отменим данное решение и сведения о Вас не будут включены в РНП, а также, вернем обеспечение контракта, если надо. Вы можете задать любые вопросы!
 
 Для этого просто позвоните по телефону +7 978 721 5775 или напишите нам.
 Если своими силами не получитьcя урегулировать данную проблему, пишите нам. Мы на протяжении 5 лет решаем подобные вопросы, я и мои коллеги, опытные юристы, исходя из документов по контракту, заранее можем сказать, что Вас ожидает.
@@ -33,7 +33,7 @@ https://zakupki.gov.ru/epz/dizk/dizkCard/generalInformation.html?dizkId={mess}
     password = "zPxcjWHUW6rWW22"
     msg['From'] = "rnp.auto.informator@gmail.com"
     msg['To'] = to_email
-    msg['Subject'] = f'уведомление о внесении в РНП по контракту№{subscription}'
+    msg['Subject'] = f'Не дадим внести в РНП по контракту №{subscription}'
 
     # add in the message body
     msg.attach(MIMEText(message, 'plain'))
@@ -57,7 +57,7 @@ https://zakupki.gov.ru/epz/dizk/dizkCard/generalInformation.html?dizkId={mess}
     cur.execute(f"UPDATE RNP SET status = 0 WHERE  decision_number = {mess} ")
     con.commit()
     con.close()
-    print('отправленно на ',to_email)
+    print('отправленно на ', to_email)
 
 
 def format_string(a):
@@ -65,18 +65,19 @@ def format_string(a):
         if i == '.':
             a = a.split('.')
             x = str()
-            for i in a:
-                if i != a[-1]:
-                    x += i + '\.'
+            for y in a:
+                if y != a[-1]:
+                    x += y + '\.'
                 else:
-                    x += i
+                    x += y
     return x
+
 
 def mailing():
     con = sqlite3.connect('RNP.db')
 
     cur = con.cursor()
-    cur.execute('''SELECT * FROM RNP WHERE status = 0 AND email_status = 1  LIMIT 10''')
+    cur.execute('''SELECT * FROM RNP WHERE status = 0 AND email_status = 1  LIMIT 1''')
     exists = cur.fetchall()
     print(exists)
     for data in exists:
@@ -84,9 +85,7 @@ def mailing():
         cur.execute(f'''SELECT * FROM RNP WHERE email = ?''', (data[2],))
         checks = cur.fetchall()
 
-
         if len(checks) <= 1:
-
             send_email(data[0], data[2], data[1])
             print(checks)
             rand_sleep = random.randint(1, 5)
@@ -96,9 +95,7 @@ def mailing():
 
         else:
             cur.execute(f"UPDATE RNP SET status = 0 WHERE  email = ?", (data[2],))
-
             print(f'{checks} уже в таблице и ему не будет направленн емейл')
-
 
     print(f'направлено {len(exists)} емейл')
     con.commit()

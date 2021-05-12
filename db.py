@@ -1,20 +1,15 @@
 # coding=UTF-8
-import sys
-import time
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+
 import sqlite3
 
 from sheets import googlesheet
 
+
 class base ():
     def __init__(self):
         self.googlesheet = googlesheet()
-
-
-
-
-    def bd_create(self,name='oll', namecol=None):
+    @staticmethod
+    def bd_create(name='oll', namecol=None):
         """
 
         :param name: name db
@@ -43,7 +38,7 @@ class base ():
 
                 if len(need_info) > 0:
                     info.append(need_info)
-                need_info = []
+
         con.commit()
         con.close()
         con = sqlite3.connect(f'{name}.db')
@@ -63,7 +58,7 @@ class base ():
         con.commit()
         con.close()
 
-    def upgrade_sheets(self,name_table, name_sheet='Макс закупки', worksheet='новая таблица'):
+    def upgrade_sheets(self, name_table, *args, **kwargs):
         con = sqlite3.connect(f'{name_table}.db')
         cur = con.cursor()
         cur.execute(f'''SELECT * FROM {name_table} WHERE on_sheets=0''')
@@ -76,7 +71,3 @@ class base ():
 
         con.commit()
         con.close()
-
-
-#bd_create(name="oll",namecol='con_num text,name_trade text,price text, date text,deadline text,on_sheets text')
-

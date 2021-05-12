@@ -1,6 +1,6 @@
 # coding=UTF-8
 import random
-import re
+
 import time
 from newclients.mailing import newclients_mailing
 import requests
@@ -111,7 +111,7 @@ class new_clients:
                 phone = False
             result.append((name, type_org, FIO, INN, email, phone, 0))
 
-            name, type_org, FIO, INN, email, phone = False, False,False,False,False,False
+            name, type_org, FIO, INN, email, phone = False, False, False, False, False, False
         print(f'отправленно на обработку {len(hrefs)} ссылок')
         return result
 
@@ -136,7 +136,7 @@ class new_clients:
     def read_newclients_db(self):
         con = sqlite3.connect(f'newclients.db')
         cur = con.cursor()
-        cur.execute(f'''SELECT * FROM newclients WHERE status = 0 AND name = 0 LIMIT 10''')
+        cur.execute(f'''SELECT * FROM newclients WHERE status = 0 AND name = 0 LIMIT 1''')
         check = cur.fetchall()
 
         con.commit()
@@ -156,7 +156,3 @@ class new_clients:
         for records in record:
             newclients_mailing(records)
             time.sleep(random.randint(1, 5))
-
-# base().bd_create(name='newclients', namecol='name text, type_org text, FIO text, INN text, email text, phone text, status email integer')
-
-
