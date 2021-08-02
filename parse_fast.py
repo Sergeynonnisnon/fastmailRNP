@@ -2,8 +2,9 @@
 import re
 import requests
 from bs4 import BeautifulSoup
-from UA import ua
+from full_base_zakupki_gov.UA import ua
 import sqlite3
+import lxml
 
 
 class parse_fastest():
@@ -79,8 +80,8 @@ class parse_fastest():
                 # проверяем на наличие в таблице
 
                 contract_number[href] = [names, price, date]
-
-
+        return contract_number
+"""
                 a = f'zakupki.gov.ru{href}'
                 con = sqlite3.connect('oll.db')
                 cur = con.cursor()
@@ -103,7 +104,7 @@ class parse_fastest():
                     con.close()
                     continue
 
-            result[e] = contract_number
+            result[e] = contract_number"""
 
-        return result
+
 

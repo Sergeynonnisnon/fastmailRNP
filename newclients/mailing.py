@@ -16,7 +16,7 @@ class newclients_mailing():
     def __init__(self, record):
 
         self.record = record
-        self.files = [r"C:\Users\pc\PycharmProjects\fullbasezakupki.gov\newclients\files"]
+        self.files = [r"full_base_zakupki_gov/newclients/files"]
         self.msg_text = self.org_or_ip(self.record)[0]
         self.msg_subj = self.org_or_ip(self.record)[1]
         self.addr_to = self.record[4]
