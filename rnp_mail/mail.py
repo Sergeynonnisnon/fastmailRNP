@@ -30,8 +30,8 @@ https://zakupki.gov.ru/epz/dizk/dizkCard/generalInformation.html?dizkId={mess}
 '''
 
     # setup the parameters of the message
-    password = "zPxcjWHUW6rWW22"
-    msg['From'] = "rnp.auto.informator@gmail.com"
+    password = ""#Password
+    msg['From'] = "" #EMAIL
     msg['To'] = to_email
     msg['Subject'] = f'Не дадим внести в РНП по контракту №{subscription}'
 
