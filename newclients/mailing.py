@@ -89,8 +89,8 @@ class newclients_mailing():
         con.commit()
         con.close()
 
-        addr_from = "rnp.auto.informator@gmail.com"  # Отправитель
-        password = "zPxcjWHUW6rWW22"  # Пароль
+        addr_from = ""  # Отправитель
+        password = ""  # Пароль
 
         msg = MIMEMultipart()  # Создаем сообщение
         msg['From'] = addr_from  # Адресат
